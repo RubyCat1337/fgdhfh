@@ -1,0 +1,165 @@
+{% load custom_tags %}
+{% load static  %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../../media/website.ico">
+    <title>ByteBliss</title>
+    {% block css %}{% endblock %}
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js" integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS" crossorigin="anonymous" defer></script>
+    <script src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js" defer></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script defer>
+        function toggleDropdown() {
+        document.getElementById("myDropdown").classList.toggle("show");
+        document.querySelectorAll(".bar").forEach(bar => bar.classList.toggle("change"));
+        }
+
+        window.onclick = function(event) {
+        if (!event.target.matches('.dropbtn')) {
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            var i;
+            for (i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show')) {
+                openDropdown.classList.remove('show');
+                document.querySelectorAll(".bar").forEach(bar => bar.classList.remove("change"));
+            }
+            }
+        }
+        }
+        function toggleDropdown2(event) {
+            document.getElementById("myDropdown2").classList.toggle("show");
+            document.querySelectorAll(".bar2").forEach(bar => bar.classList.toggle("change"));
+        }
+
+        window.addEventListener("click", function(event) {
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            for (var i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show') && !event.target.matches('.dropbtn2')) {
+                    openDropdown.classList.remove('show');
+                    document.querySelectorAll(".bar2").forEach(bar => bar.classList.remove("change"));
+                }
+            }
+        });
+
+    </script>
+</head>
+<body>
+    <head>
+        
+        <div class="upper">
+            <img src="/media/Group 2.png" alt="" class="logo">
+            <nav class="navbar navbar-expand-lg">
+                <div class="container-fluid">
+                    <div class="burger-menu">
+                    <div class="dropdown2 w-100" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+                        <button onclick="toggleDropdown2()" type="button" class="dropbtn2 navbar-toggler" style="width: 100%;background-color: white;">
+                            <span class="navbar-toggler-icon bar2"></span>
+                            </button>
+                        <div id="myDropdown2" style="border-radius: 10px;position: relative; width: 100%;" class="dropdown-content2">
+                            <div class="searchoo" style="width: 100%;">
+                                <nav class="navbar" style="width: 100%;">
+                                    <div class="container-fluid search2" style="width: 98%;">
+                                    <form class="d-flex" role="search" method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="name" value="search">
+                                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="searched-product">
+                                        <button class="btn btn-outline-success" type="submit">Search</button>
+                                    </form>
+                                    </div>
+                                </nav>
+                            </div>
+                            <a class="btn btn-outline-secondary text-light" style="border: none;" href="../">About us</a>
+                            <a class="btn btn-outline-secondary text-light" style="border: none;" href="../catalogue/">Catalog</a>
+                            <a class="btn btn-outline-secondary text-light" style="border: none;" href="../feedback/">Feedback</a>
+                            <a class="btn btn-outline-secondary text-light" style="border: none; display:flex; flex-direction: column; gap: 0; max-height: 48px;" href="../cart/"><p style="padding: 0; height: 20px;">Cart</p><p id="countProductInCart" style="position: absolute;left: 0; right: 0; margin-left: auto; margin-right: auto; padding: 0;top:63%; background-color: white;border-radius: 30px; color: black; max-width: 30px;max-height: 30px; align-items: center;justify-content: center;">{% count_products_in_cart request %}</p></a>
+                            {% if login == 'false' %}
+                            <hr color="white" style="color: white;"> 
+                            <a class="btn btn-outline-secondary text-light" style="border: none;" href="../registration/">Registration</a>
+                            <a class="btn btn-outline-secondary text-light" style="border: none;" href="../login/">Login</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                  <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                      <li class="nav-item">
+                        <div class="burger-menu">
+                            <div class="dropdown">
+                                <button onclick="toggleDropdown()" class="dropbtn btn btn-primary" style="--bs-btn-bg: #0d6dfd00; 
+                                --bs-btn-border-color: #0d6dfd00;" >
+                                    <span class="bar" style="width: 33px; height: 4px;"></span>
+                                    <span class="bar" style="width: 33px; height: 4px;"></span>
+                                    <span class="bar" style="width: 33px; height: 4px;"></span>
+                                    </button>
+                                <div id="myDropdown" style="border-radius: 10px;" class="dropdown-content">
+                                    <a class="btn btn-outline-secondary" style="border: none;" href="../">About us</a>
+                                    <a class="btn btn-outline-secondary" style="border: none;" href="../catalogue/">Catalog</a>
+                                    <a class="btn btn-outline-secondary" style="border: none;" href="../feedback/">Feedback</a>
+                                    {% if login == 'false' %}
+                                    <hr>
+                                    <a class="btn btn-outline-secondary" style="border: none;" href="../registration/">Registration</a>
+                                    <a class="btn btn-outline-secondary" style="border: none;" href="../login/">Login</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                      </li>
+                    </ul>
+                    <div class="searchoo" >
+                        <nav class="navbar">
+                            <div class="container-fluid search2">
+                            <form class="d-flex" role="search" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="name" value="search">
+                                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="searched-product">
+                                <button class="btn btn-outline-success" type="submit">Search</button>
+                            </form>
+                            </div>
+                        </nav>
+                    </div>
+                    <div class=" cart" style="scale: 0.7;">
+                        <a href="../cart/" style="text-decoration: none;  width: 58px;height: 37px;"><img src="/media/Vector.png" alt="" ><p id="countProductInCart" style="text-decoration: none;color: black; background-color: white;border-radius: 30px;">{% count_products_in_cart request %}</p></a>
+                    </div>
+                  </div>
+                </div>
+              </nav>
+        </div>
+
+    </head>
+    <main>
+    {%block content%}
+    {%endblock%}
+    </main>
+    <footer>
+        <img src="/media/Group 2.png" alt="" class="logo-futer">
+            <div class="email">
+                <p>Emails</p>
+                <p>justuser166@gmail.com</p>
+            </div>
+                <div class="icon">
+                    <a href="https://discord.gg/MBCJSngt"><img src="/media/dcicon.png" alt=""></a>
+                    <a href="https://www.instagram.com/byte__bliss/"><img src="/media/insta.png" alt=""></a>
+                    <a href="https://www.reddit.com/r/ByteBliss/"><img src="/media/reddit.png" alt=""></a>
+                </div>
+            <div class="phone">
+                <p>Phone numbers</p>
+                <p>+380665623246</p>
+                <p>+380988912291</p>
+                <p>+380505506300</p>
+            </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js" integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS" crossorigin="anonymous"></script>
+    <script src="{% static 'js/script.js' %}"></script>
+</body>
+</html>
