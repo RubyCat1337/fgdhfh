@@ -1,0 +1,205 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="bg-succes" hidden style="left: 0;right: 0;top: 0;bottom: 0; z-index: 50; position:fixed; background-color: rgba(0, 0, 0, 0.429); display: flex; width: 100%; height: 100%;margin: 0;padding: 0; align-items: center; justify-content: center;">
+  <div class="succes" style="display: flex; width: 80%; height: 50%; background-color: white; border-radius: 20px; flex-direction: column;align-items: center;justify-content: center; text-align: center;">
+    <strong style="font-size: 25px;">You succesfully bought product</strong>
+    <a href="../cart/" style="font-size: 20;text-decoration: none;">click here to open cart</a>
+  </div>
+</div>
+<div class="product-block">
+  <div class="features">
+    <div class="product-2">
+      <img src="{{ product.image.url }}" class="d-block w-100" alt="...">
+    </div>
+    <div class="product-description">
+      <div class="des-features">
+        <h3>{{ product.name }}</h3>
+        <nav class="navbar w-100">
+          <div class="container-fluid w-100">
+            <button class="navbar-toggler w-100" type="button" style="padding: 0;" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+          </div>
+        </nav>
+        <div class="collapse" id="navbarToggleExternalContent" style="position:relative">
+          <div class=" p-1">
+            <ul class="nav nav-tabs" style="display: flex;justify-content: center;"  id="myTab" role="tablist">
+              <li class="nav-item p-2" role="presentation">
+                <button class="btn btn-outline-secondary active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane"
+                  type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Description</button>
+              </li>
+              <li class="nav-item p-2" role="presentation">
+                <button class="btn btn-outline-secondary" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane"
+                  type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Features</button>
+              </li>
+              <li class="nav-item p-2" role="presentation">
+                <button class="btn btn-outline-secondary" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane"
+                  type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">Create comments</button>
+              </li>
+              <li class="nav-item p-2" role="presentation">
+                <button class="btn btn-outline-secondary" id="contact-tab-1" data-bs-toggle="tab" data-bs-target="#contact-tab-pane-1"
+                  type="button" role="tab" aria-controls="contact-tab-pane-1" aria-selected="false">Comments</button>
+              </li>
+            </ul>
+          </div>
+        </div>
+        
+        <!-- <ul class="nav nav-tabs"  id="myTab" role="tablist">
+          <li class="nav-item p-2" role="presentation">
+            <button class="btn btn-outline-secondary active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane"
+              type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Description</button>
+          </li>
+          <li class="nav-item p-2" role="presentation">
+            <button class="btn btn-outline-secondary" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane"
+              type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Features</button>
+          </li>
+          <li class="nav-item p-2" role="presentation">
+            <button class="btn btn-outline-secondary" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane"
+              type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">Create comments</button>
+          </li>
+          <li class="nav-item p-2" role="presentation">
+            <button class="btn btn-outline-secondary" id="contact-tab-1" data-bs-toggle="tab" data-bs-target="#contact-tab-pane-1"
+              type="button" role="tab" aria-controls="contact-tab-pane-1" aria-selected="false">Comments</button>
+          </li>
+        </ul> -->
+
+        <div class="tab-content" id="myTabContent">
+          <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel"
+            aria-labelledby="home-tab" tabindex="0">{{ product.description }}</div>
+          <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel"
+            aria-labelledby="profile-tab" tabindex="0">{{ product.features }}</div>
+            <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
+              <form action="" method="post" style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                {% csrf_token %}
+                <input type="text" name="name-massages" onsubmit="return validateCommentForm()" id="name-input" required placeholder="Your name" style="text-align: center; margin-top: 10px;width: 260px;">
+                <input type="text" hidden name="productt" value="{{product.pk}}" class="productt">
+                <textarea name="messages" onsubmit="return validateCommentForm()" id="message-input" required placeholder="Your message" style="text-align: center; margin-top: 10px;resize: none;width: 260px;height: 60px;color: grey;"></textarea>
+                <p class="error text-danger" id="error-message-comment"><strong>{{ error_comment }}</strong></p>
+                <button class="button-add-coment" id="create-comment-btn">Create</button>
+              </form>
+            </div>
+          <div class="tab-pane fade" style="height: 195px; overflow-y: scroll;" id="contact-tab-pane-1" role="tabpanel" aria-labelledby="contact-tab-1" tabindex="0">
+            <div class="product-3" style="border: 1px solid #ccc; padding: 10px; border-radius: 5px; margin-top: 10px;">
+              {% for comment in product.comments.all %}
+              <div class="product-4">
+                
+                <h2><strong>{{ comment.name }}</strong></h2>
+                <p style="font-size: 14px;">Created at: {{ comment.created_at }}</p>
+                <p>{{ comment.messages }}</p>
+                
+              </div>
+              <hr>
+              {% empty %}
+              <p>No comments available.</p>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cart">
+        <form method="POST" class="addToCart" action="{{ product.pk }}">
+          {% csrf_token %}
+          <input type="text" id="text-input" hidden name="add-to-cart">
+          <input type="text" hidden value="{{ product.pk }}" id="product_pk" name="product_pk">
+          <p>{{ product.price }}₴</p>
+          <button class="button-add-to-cart" id="load-comments-btn">Add to cart</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+  <script>
+    $(document).ready(function () {
+      $('#load-comments-btn').click(function (event) {
+        event.preventDefault();
+
+        let name = $('#text-input').val();
+        let productId = $('#product_pk').val();
+
+        $.ajax({
+          type: 'POST',
+          url: '/product/' + $('#product_pk').val(),
+          data: {
+            'name': name,
+            'product_pk': productId,
+            'csrfmiddlewaretoken': '{{ csrf_token }}'
+          },
+          success: function (response) {
+            document.querySelector('.bg-succes').hidden = false
+            let count = document.querySelector('#countProductInCart');
+            if (count.textContent == 'None') {
+              count.textContent = '1';
+              count.style.display = 'flex';
+            } else {
+              count.textContent = Number(count.textContent) + 1;
+            }
+          },
+        });
+      });
+    });
+    // Event handler for button click or filter selection
+    $('.button-add-coment').click(function(event) {
+  event.preventDefault(); // Prevent default form behavior
+
+  // Get input values
+  let name = $('#name-input').val();
+  let message = $('#message-input').val();
+  let productt = $('.productt').val()
+
+  // AJAX request to the server
+  $.ajax({
+    url: '', // Specify the URL for processing the comment
+    type: 'POST',
+    data: {
+      'csrfmiddlewaretoken': '{{ csrf_token }}',
+      'name-massages': name,
+      'messages': message,
+      'product' : productt,
+      'name' : 'comment'
+    },
+    success: function(response) {
+      if (response.error_comment) {
+        
+        // Display error message below the comment form
+        $('#error-message-comment').html('<strong>' + response.error_comment + '</strong>');
+      } else {
+        $('#name-input').val('');
+        $('#message-input').val('');
+        // Clear the error message
+        $('#error-message-comment').empty();
+        $('.product-3').empty();
+        console.log(true)
+        console.log(response)
+        for (let i = 0; i < response.comments.length; i++) {
+          let comment = response.comments[i];
+          console.log(true)
+          console.log(comment)
+          let newcom = `
+          <div class="product-4">
+                
+                <h2><strong>${comment.name}</strong></h2>
+                <p style="font-size: 14px;">Created at: ${comment.created_at}</p>
+                <p>${comment.messages}</p>
+                
+              </div>
+              <hr>
+            `;
+            $('.product-3').append(newcom);
+        }
+        // let commentsTab = $('#contact-tab-pane-1');
+        // commentsTab.html(response.comments);
+      }
+    },
+    error: function(xhr, status, error) {
+      // Handle error
+      console.error(error);
+    }
+  });
+});
+    document.querySelector('.bg-succes').addEventListener('click', (event) => {
+      document.querySelector('.bg-succes').hidden = true;
+    })
+
+</script>
+{% endblock %}

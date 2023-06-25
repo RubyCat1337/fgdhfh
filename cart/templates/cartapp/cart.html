@@ -1,0 +1,213 @@
+{% extends 'base.html' %} {% block content %}
+<div class="product-block233">
+  {% if empty != 'true' %}
+  <div class="need-to-hide">
+  <div
+    class="modal fade "
+    id="staticBackdrop"
+    data-bs-backdrop="static"
+    data-bs-keyboard="false"
+    tabindex="-1"
+    aria-labelledby="staticBackdropLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered h-25 ">
+      <div class="modal-content .modal-sm h-25" style="display: flex">
+        <div
+          class="modal-body .modal-sm h-25"
+          style="
+            display: flex;
+            align-items: center;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+          "
+        >
+          <form
+            method="post"
+            style="
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              flex-wrap: wrap;
+              gap: 10px;
+            "
+          >
+            {% csrf_token %}
+            <input type="text" name="name" hidden value="buy" />
+            <input
+              type="text"
+              name="UserName"
+              class="UserName"
+              id="UserName"
+              placeholder="Input your name"
+              required
+            />
+            <input
+              type="email"
+              name="email"
+              class="email"
+              id="email"
+              placeholder="Input your email"
+              required
+            />
+            <button
+              type="button"
+              class="order_products"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            >
+              Close
+            </button>
+            <button type="submit" class="order_products button-buy">Buy</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <button
+    type="button"
+    class="button-modal"
+    data-bs-toggle="modal"
+    data-bs-target="#staticBackdrop"
+  >
+    Place an order
+  </button>
+  {% endif %}
+
+  <div
+    class="products-idi-b-bulkydgfuiuicbbhgyzgufgbhhjyuvxtvdfVJHNGgyuFgnmbhgzyyfyugHJchhcFYctuyGH"
+  >
+    {% for product in products %}
+    <div
+      class="products-1337zxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxc"
+    >
+      <p>{{ product.name }}</p>
+      <p>{{ product.price }} $</p>
+      <p>{{ product.cost }}</p>
+      <form method="POST" class="delet_from_cart">
+        {% csrf_token %}
+        <input
+          class="product_pk"
+          type="hidden"
+          name="product_pk"
+          id="product_pk"
+          value="{{ product.pk }}"
+        />
+        <button class="button-delete-from-cart" id="button-delete-from-cart">
+          Delete from cart
+        </button>
+      </form>
+    </div>
+    {% endfor %} {% if empty == 'true' %}
+    <h3 style="color: black">Your cart is empty</h3>
+    <a
+      style="color: rgb(30, 81, 146); text-decoration: none"
+      href="../catalogue"
+      >You can click here to redirect to the cart</a
+    >
+    {% endif %}
+  </div>
+</div>
+<script>
+ $(document).ready(function() {
+  $(".button-delete-from-cart").click(function(event) {
+    event.preventDefault();
+    const form = event.target.closest('form');
+    console.log(form)
+    let productId = form.getElementsByClassName('product_pk')['product_pk'].value;
+    console.log(productId)
+
+    let url = "/cart/";
+
+    $.ajax({
+      type: "POST",
+      url: url,
+      data: {
+        csrfmiddlewaretoken: "{{ csrf_token }}",
+        'product_pk_deleted': productId,
+      },
+      success: function(response) {
+        
+        console.log(response.list_products)
+        $(".products-idi-b-bulkydgfuiuicbbhgyzgufgbhhjyuvxtvdfVJHNGgyuFgnmbhgzyyfyugHJchhcFYctuyGH").empty();
+        for (let i = 0; i < response.list_products.length; i++) {
+          let product = response.list_products[i];
+          let deleted = `
+            <div class="products-1337zxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxc">
+              <p>${product.name}</p>
+              <p>${product.price} $</p>
+              <form method="POST" class="delet_from_cart">
+                {% csrf_token %}
+                <input type="hidden" name="product_pk" id="product_pk" value="${product.id}">
+                <button class="button-delete-from-cart" id="button-delete-from-cart">
+                  Delete from cart
+                </button>
+              </form>
+            </div>
+          `;
+          $(".products-idi-b-bulkydgfuiuicbbhgyzgufgbhhjyuvxtvdfVJHNGgyuFgnmbhgzyyfyugHJchhcFYctuyGH").append(deleted);
+        }
+      },
+      error: function(xhr, errmsg, err) {
+        // Обработка ошибок при выполнении запроса (если необходимо)
+        console.log(xhr.status + ": " + xhr.responseText);
+      },
+    });
+  });
+  $(".button-buy").click(function(event) {
+    event.preventDefault();
+    const form = event.target.closest('form');
+    console.log(form)
+    let UserName = form.getElementsByClassName('UserName')['UserName'].value;
+    let email = form.getElementsByClassName('email')['email'].value;
+
+    let url = "/cart/";
+
+    $.ajax({
+      type: "POST",
+      url: url,
+      data: {
+        csrfmiddlewaretoken: "{{ csrf_token }}",
+        'UserName' : UserName,
+        'email' : email,
+        'name' : 'buy'
+      },
+      success: function(response) {
+        console.log(response.list_products)
+        $('.need-to-hide').remove();
+        $('.show').remove();
+        $('.button-modal').remove();
+        $('#countProductInCart').remove();
+        $(".products-idi-b-bulkydgfuiuicbbhgyzgufgbhhjyuvxtvdfVJHNGgyuFgnmbhgzyyfyugHJchhcFYctuyGH").empty();
+          let deleted = `
+          <h3 style="color: black">Your cart is empty</h3>
+          <a
+            style="color: rgb(30, 81, 146); text-decoration: none"
+            href="../catalogue"
+            >You can click here to redirect to the cart</a
+          >
+          `;
+          $(".products-idi-b-bulkydgfuiuicbbhgyzgufgbhhjyuvxtvdfVJHNGgyuFgnmbhgzyyfyugHJchhcFYctuyGH").append(deleted);
+          let count = document.querySelector('#countProductInCart');
+          if (count.textContent == '1') {
+              count.textContent = 'None';
+              count.style.display = 'none';
+              main.style.justifyContent = "center";
+              location.reload()
+          } else {
+              count.textContent = Number(count.textContent) - 1;
+              main.style.justifyContent = "center";
+          }
+      },
+      error: function(xhr, errmsg, err) {
+        // Обработка ошибок при выполнении запроса (если необходимо)
+        console.log(xhr.status + ": " + xhr.responseText);
+      },
+    });
+  });
+});
+</script>
+{% endblock %}

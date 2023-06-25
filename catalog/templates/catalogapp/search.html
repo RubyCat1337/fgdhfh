@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{%block content%}
+<div class="search-body">
+    <div class="search-label">
+        <h1 style="color: white;">You searched for: {{search_req}}</h1>
+        <h2 style="color: white;">{{nothing}}</h2>
+    </div>
+        <div class="cataloggg text-center" id="product-list" style="margin-top: 10px;margin-bottom: 10px;">
+            {% for product in list_searched %}
+              <div class="catalogg">
+                <img src="{{ product.image.url }}" class="card-img-top" alt=".s..">
+                <div class="card-body">
+                  <h2>{{ product.name }}</h2>
+                  <div class="price-and-detail">
+                    <span>{{ product.price }}$</span>
+                    <a href="{{ product.get_absolute_url }}" class="btn btn-primary">Detailed description</a>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+</div>
+{%endblock%}

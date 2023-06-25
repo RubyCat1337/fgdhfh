@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="reg-blok2">
+    <div class="reg-blok">
+        <div class="reg" >
+            <h1 style="color: rgb(255, 255, 255);">Registration</h1>
+            <form method="post" class="needs-validation" novalidate>
+                {% csrf_token %}
+                <div class="mb-3" style="height: 52px;width: 200px;">
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Input your nickname" autocomplete="off" required>
+                    <div class="invalid-feedback" >
+                        Wrong username!
+                    </div>
+                </div>
+                <div class="mb-3" style="height: 52px;width: 200px;">
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Input your email" autocomplete="off" required>
+                    <div class="invalid-feedback">
+                        Misspelled email
+                    </div>
+                </div>
+                <div class="mb-3" style="height: 52px;width: 200px;">
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Input your password" autocomplete="off" required>
+                    <div class="invalid-feedback" >
+                        Your password isn't safe!
+                    </div>
+                </div>
+                <div class="mb-3" style="height: 52px;width: 200px;">
+                    <input type="password" class="form-control" id="password_confirm" name="password_confirm" placeholder="Repeat your password" autocomplete="off" required>
+                    <div class="invalid-feedback" >
+                        Passwords don't match
+                    </div>
+                </div>
+                <div class="mb-3" style="height: 52px;width: 200px;">
+                    <input type="text" class="form-control form-tele" id="phone" data-inputmask="'mask': '+38(999)-999-9999', 'showMaskOnHover': false, 'placeholder': '#'" name="phone" required style="width: 200px;">
+                    <div class="invalid-feedback" >
+                        Incorrect number dialled
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary" id="create-profile">Submit</button>
+            </form>
+            <span class="error_reg">{{ error_text }}</span>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/inputmask@5.3.0/dist/inputmask/min/inputmask.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/inputmask@5.3.0/dist/inputmask/min/jquery.inputmask.min.js"></script>
+<script>
+    (() => {
+        "use strict";
+
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        const forms = document.querySelectorAll(".needs-validation");
+
+        // Loop over them and prevent submission
+        Array.from(forms).forEach((form) => {
+            form.addEventListener(
+                "submit",
+                (event) => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+
+                    form.classList.add("was-validated");
+            },
+            false
+          );
+        });
+      })();
+</script>
+<script>
+$(document).ready(function() {
+    $('#create-profile').click(function(event) {
+        event.preventDefault();
+
+        let name = document.querySelector('#name').value;
+        let email = document.querySelector('#email').value;
+        let password = document.querySelector('#password').value;
+        let password_confirm = document.querySelector('#password_confirm').value;
+        let phone = document.querySelector('#phone').value;
+
+        $.ajax({
+            type: 'POST',
+            url: '../registration/',
+            data: {
+                'name': name,
+                'email': email,
+                'password': password,
+                'password_confirm': password_confirm,
+                'phone': phone,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            
+        });
+        
+    });
+});
+      </script>
+<script>
+    (() => {
+        "use strict";
+
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        const forms = document.querySelectorAll(".needs-validation");
+
+        // Loop over them and prevent submission
+        Array.from(forms).forEach((form) => {
+            form.addEventListener(
+                "submit",
+                (event) => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+
+                    form.classList.add("was-validated");
+                },
+                false
+            );
+        });
+    })();
+
+    document.addEventListener("DOMContentLoaded", function() {
+        let formTeleInput = document.querySelector(".form-tele");
+        Inputmask().mask(formTeleInput);
+        formTeleInput.setAttribute('placeholder', "+##(###)-###-####");
+
+        formTeleInput.addEventListener("input", function() {
+            let mt = $(this).inputmask("getmetadata");
+            if (mt && mt['cd'] && mt['cc']) {
+                this.value = `${mt['cd']} (${mt['cc']})`;
+            }
+        });
+
+        Inputmask.extendAliases({
+            my_phone: {
+                alias: "abstractphone",
+                placeholder: '#',
+                phoneCodes: [{
+                    mask: "+987-####",
+                    cc: "zz",
+                    cd: "zzzz",
+                    desc_en: "Moon!",
+                    name_ru: "яяя",
+                    desc_ru: ""
+                }, {
+                    mask: "+789-###",
+                    cc: "yy",
+                    cd: "Y-Y",
+                    desc_en: "Sun!"
+                }],
+                onKeyValidation: function () {
+                    let mt = $(this).inputmask("getmetadata");
+                    if (mt && mt['desc_en']) {
+                        formTeleInput.value = mt['desc_en'];
+                        formTeleInput.style.color = `#${Math.floor(Math.random() * 0x1000000).toString(16).padStart(6, 0)}`;
+                    }
+                }
+            }
+        });
+
+        $(formTeleInput).inputmask("my_phone");
+    });
+</script>
+{% endblock %}

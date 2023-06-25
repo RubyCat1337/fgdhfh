@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{%block content%}
+
+<div class="feedback-block">
+    <div class="feedbackk">
+        <h1>Feedback</h1>
+        <form method="post" class="feedback-form needs-validation" style="display: flex; width: 90%; gap: 30px; " novalidate>
+            {% csrf_token %}
+                <div style="display: flex; flex-direction: column; width: 100%;">
+                <input type="text" minlength="5" aria-autocomplete="none" maxlength="20" class="form-control" for="validationCustom01" name = "name" placeholder="name" style="width: 100%;" required>
+                <div class="valid-feedback" style="position: relative;">
+                    Looks good!
+                </div>
+                <div class="invalid-feedback">
+                    You cannot leave this field empty or shorter than 5 characters and longer than 20 characters
+                </div>
+                </div>
+                <div style="display: flex; flex-direction: column; width: 100%;">
+                <input type="email" class="form-control" aria-autocomplete="none" for="validationCustom02" name = "email" placeholder="email" style="width: 100%;" required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+                <div class="invalid-feedback">
+                    You need to this field with your email
+                </div>
+                </div>
+                <!-- <textarea name="order" id="" cols="22" style="height: 130px;" rows="4" placeholder="feedback" required> </textarea> -->
+                <div class="form-floating" style="width: 100%;">
+                    <textarea class="form-control" maxlength="255" minlength="20" for="validationCustom03" aria-placeholder="Leave your feedback here" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px;resize: none; width: 100%;" name="order" required></textarea>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div class="invalid-feedback">
+                        You cannot leave this field empty or shorter than 20 characters or too more than 255 characters
+                    </div>
+                </div>
+                <input type="submit" class="button-leave-feedback"  value="Send">
+        </form>
+        
+    </div>
+</div>
+<script>
+    (() => {
+  'use strict'
+
+  // Fetch all the forms we want to apply custom Bootstrap validation styles to
+  const forms = document.querySelectorAll('.needs-validation')
+
+  // Loop over them and prevent submission
+  Array.from(forms).forEach(form => {
+    form.addEventListener('submit', event => {
+      if (!form.checkValidity()) {
+        event.preventDefault()
+        event.stopPropagation()
+      }
+
+      form.classList.add('was-validated')
+    }, false)
+  })
+})()
+
+</script>
+                 
+{%endblock%}

@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div id="arrowTop" class="btn btn-primary rounded-5" type="button" style="position: fixed;z-index: 10; bottom: 20%; background-color: #378A95;border: #378A95;" hidden><img style="height: 25px; width: 25px; color: white;" src="../../../media/icons8-up-50.png" alt=""></div>
+<div class="category-blok2">
+  <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop"
+    aria-controls="offcanvasTop" style="background-color: white;color: black;">Filter</button>
+
+
+  <div class="cataloggg text-center" id="product-list" style="margin-top: 10px;margin-bottom: 10px;">
+    {% for product in list_products %}
+    <div class="catalogg">
+      <!-- Видаліть перевірку наявності зображення -->
+      <img src="{{ product.image.url }}" class="card-img-top" alt=".s..">
+      <div class="card-body">
+        <h2>{{ product.name }}</h2>
+        <div class="price-and-detail">
+          <span>{{ product.price }}$</span>
+          <a href="{{ product.get_absolute_url }}" class="btn btn-primary">Detailed description</a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="offcanvas offcanvas-top" data-bs-backdrop="static" tabindex="-1" id="offcanvasTop" aria-labelledby="offcanvasTopLabel"
+  style="background-color: white;">
+  <div class="offcanvas-header" style="background-color: white;">
+    <h5 class="offcanvas-title" id="offcanvasTopLabel">Filters</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body filters">
+    <form method="post" style="width: 100%; display: flex;align-items: center;flex-direction: column;justify-content: end;">
+      {% csrf_token %}
+      <div class="manufacturers_menu"
+        style="display: flex; width: 95%; align-items: center; flex-direction: row; flex-wrap: wrap;justify-content: center; gap: 10px;">
+        {% for category in additional_category %}
+        <div class="manufacturers">
+          <input type="checkbox" class="check" id="check-input-{{ category.pk }}" name="check"
+            value="{{ category.pk }}" checked>
+          <label for="check-input-{{ category.pk }}">{{ category.name }}</label>
+        </div>
+        {% endfor %}
+      </div>
+      <input type="text" hidden name="name" id="text-input2" value="filter">
+      <button type="submit" id="submit-btn" class="btn btn-secondary">Submit filters</button>
+    </form>
+
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  
+  const arrowTop = document.querySelector("#arrowTop");
+
+  window.addEventListener("scroll", (event) =>{
+      if (window.scrollY < window.innerHeight / 2) {
+          arrowTop.hidden = true
+      }
+      if (window.scrollY > window.innerHeight / 2) {
+          arrowTop.hidden = false
+      }
+  });
+  arrowTop.addEventListener("click",(event)=>{
+      // document.documentElement.scrollTop = 0;
+      window.scrollTo(0, 0);
+  });
+  $(document).ready(function() {
+    // Event handler for button click or filter selection
+    $('#submit-btn').click(function(event) {
+      event.preventDefault(); // Prevent default form behavior
+
+      // Get selected categories
+      let selectedCategories = [];
+      $('input[type=checkbox]:checked').each(function() {
+        selectedCategories.push($(this).val());
+      });
+
+      // AJAX request to the server
+      $.ajax({
+        url: '../catalogue/', // Specify the URL for processing the filters
+        type: 'POST',
+        data: {
+          'csrfmiddlewaretoken': '{{ csrf_token }}',
+          'check': selectedCategories
+        },
+        success: function(response) {
+          $("#product-list").empty();
+          console.log(response.list_products)
+          for (let i = 0; i < response.list_products.length; i++) {
+            let product = response.list_products[i];
+            let img = product.image;
+            let filter = `
+              <div class="catalogg">
+                <img src='../media/${img}' class="card-img-top" alt=".s..">
+                <div class="card-body">
+                  <h2>${product.name}</h2>
+                  <div class="price-and-detail">
+                    <span>${product.price}$</span>
+                    <a href="../product/${product.id}" class="btn btn-primary">Detailed description</a>
+                  </div>
+                </div>
+              </div>
+            `;
+            $(".cataloggg").append(filter);
+          }
+          
+
+        },
+        error: function(xhr, status, error) {
+          // Handle error
+          console.error(error);
+        }
+      });
+    });
+  });
+</script>
+<script>
+  
+</script>
+{% endblock %}
