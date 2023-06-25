@@ -1,4 +1,6 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
 <div class="product-block233">
   {% if empty != 'true' %}
   <div class="need-to-hide">
@@ -87,15 +89,10 @@
       <p>{{ product.name }}</p>
       <p>{{ product.price }} $</p>
       <p>{{ product.cost }}</p>
+      <!-- <p>{{ product }}</p> -->
       <form method="POST" class="delet_from_cart">
         {% csrf_token %}
-        <input
-          class="product_pk"
-          type="hidden"
-          name="product_pk"
-          id="product_pk"
-          value="{{ product.pk }}"
-        />
+        <input type="text" hidden value="{{ product.id }}" id="product_pk" name="product_pk">
         <button class="button-delete-from-cart" id="button-delete-from-cart">
           Delete from cart
         </button>
@@ -113,50 +110,50 @@
 </div>
 <script>
  $(document).ready(function() {
-  $(".button-delete-from-cart").click(function(event) {
-    event.preventDefault();
-    const form = event.target.closest('form');
-    console.log(form)
-    let productId = form.getElementsByClassName('product_pk')['product_pk'].value;
-    console.log(productId)
+//   $(".button-delete-from-cart").click(function(event) {
+//     event.preventDefault();
+//     const form = event.target.closest('form');
+//     // console.log(form);
+//     let productId = form.querySelector('.product_pk').value();
+//     let pk = productId;
+//     console.log(productId);
 
-    let url = "/cart/";
-
-    $.ajax({
-      type: "POST",
-      url: url,
-      data: {
-        csrfmiddlewaretoken: "{{ csrf_token }}",
-        'product_pk_deleted': productId,
-      },
-      success: function(response) {
-        
-        console.log(response.list_products)
-        $(".products-idi-b-bulkydgfuiuicbbhgyzgufgbhhjyuvxtvdfVJHNGgyuFgnmbhgzyyfyugHJchhcFYctuyGH").empty();
-        for (let i = 0; i < response.list_products.length; i++) {
-          let product = response.list_products[i];
-          let deleted = `
-            <div class="products-1337zxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxc">
-              <p>${product.name}</p>
-              <p>${product.price} $</p>
-              <form method="POST" class="delet_from_cart">
-                {% csrf_token %}
-                <input type="hidden" name="product_pk" id="product_pk" value="${product.id}">
-                <button class="button-delete-from-cart" id="button-delete-from-cart">
-                  Delete from cart
-                </button>
-              </form>
-            </div>
-          `;
-          $(".products-idi-b-bulkydgfuiuicbbhgyzgufgbhhjyuvxtvdfVJHNGgyuFgnmbhgzyyfyugHJchhcFYctuyGH").append(deleted);
-        }
-      },
-      error: function(xhr, errmsg, err) {
-        // Обработка ошибок при выполнении запроса (если необходимо)
-        console.log(xhr.status + ": " + xhr.responseText);
-      },
-    });
-  });
+//     $.ajax({
+//       type: "POST",
+//       url: ' ',
+//       data: {
+//         csrfmiddlewaretoken: "{{ csrf_token }}",
+//         'product_pk': productId,
+//         'pk' : form.querySelector('.product_pk').value
+//       },
+//       success: function(response) {
+//         console.log(response.list_products);
+//         $(".products-idi-b-bulkydgfuiuicbbhgyzgufgbhhjyuvxtvdfVJHNGgyuFgnmbhgzyyfyugHJchhcFYctuyGH").empty();
+//         console.log(response.list_products)
+//         for (let i = 0; i < response.list_products.length; i++) {
+//           let product = response.list_products[i];
+//           let deleted = `
+//             <div class="products-1337zxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxc">
+//               <p>${product.name}</p>
+//               <p>${product.price} $</p>
+//               <form method="POST" class="delet_from_cart">
+//                 {% csrf_token %}
+//                 <input type="hidden" name="product_pk" id="product_pk" value="${product.id}">
+//                 <button class="button-delete-from-cart" id="button-delete-from-cart">
+//                   Delete from cart
+//                 </button>
+//               </form>
+//             </div>
+//           `;
+//           $(".products-idi-b-bulkydgfuiuicbbhgyzgufgbhhjyuvxtvdfVJHNGgyuFgnmbhgzyyfyugHJchhcFYctuyGH").append(deleted);
+//         }
+//       },
+//       error: function(xhr, errmsg, err) {
+//         // Handle errors during the request if needed
+//         console.log(xhr.status + ": " + xhr.responseText);
+//       },
+//     });
+//   });
   $(".button-buy").click(function(event) {
     event.preventDefault();
     const form = event.target.closest('form');
@@ -180,7 +177,6 @@
         $('.need-to-hide').remove();
         $('.show').remove();
         $('.button-modal').remove();
-        $('#countProductInCart').remove();
         $(".products-idi-b-bulkydgfuiuicbbhgyzgufgbhhjyuvxtvdfVJHNGgyuFgnmbhgzyyfyugHJchhcFYctuyGH").empty();
           let deleted = `
           <h3 style="color: black">Your cart is empty</h3>
@@ -191,23 +187,30 @@
           >
           `;
           $(".products-idi-b-bulkydgfuiuicbbhgyzgufgbhhjyuvxtvdfVJHNGgyuFgnmbhgzyyfyugHJchhcFYctuyGH").append(deleted);
-          let count = document.querySelector('#countProductInCart');
-          if (count.textContent == '1') {
-              count.textContent = 'None';
-              count.style.display = 'none';
-              main.style.justifyContent = "center";
-              location.reload()
-          } else {
-              count.textContent = Number(count.textContent) - 1;
-              main.style.justifyContent = "center";
-          }
+         
       },
       error: function(xhr, errmsg, err) {
-        // Обработка ошибок при выполнении запроса (если необходимо)
         console.log(xhr.status + ": " + xhr.responseText);
       },
     });
   });
 });
 </script>
+<!-- <script src="{% static 'js/script1.js' %}"></script> -->
+<script>
+
+  document.querySelector('.button-delete-from-cart').addEventListener('click', (event) => {
+        if (count1.textContent == '1' || count2.textContent == '1') {
+            count1.textContent = 'None';
+            count1.style.display = 'none';
+            count2.textContent = 'None';
+            count2.style.display = 'none';
+        } else {
+            count1.textContent = Number(count1.textContent) - 1;
+            count2.textContent = Number(count2.textContent) - 1;
+            console.log(count1.textContent);
+        }
+  });
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 {% endblock %}

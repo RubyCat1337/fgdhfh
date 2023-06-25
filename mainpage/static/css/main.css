@@ -174,7 +174,9 @@
     display: block;
   }
 
-
+.hiddenClass{
+    display: none;
+}
 main{
     width: 100%;
     min-height: 48.9%;
@@ -196,7 +198,7 @@ main{
     justify-content: center;
     flex-direction: column;
     /* box-sizing: border-box; */
-    margin-top: 50px;
+    /* margin-top: 20px; */ 
 
     display: flex;
     gap: 15px;
@@ -249,9 +251,9 @@ main{
     gap: 17px;
     
     width: 90%;
-    height: 100%;
-    min-height: 100%;
-    margin-bottom: 50px;
+    /* height: 100%; */
+    min-height: 80%;
+    margin-bottom: 20px;
     background-color: #FFFFFF;
     border-radius: 20px;
 
@@ -268,7 +270,6 @@ main{
     padding: 20px 62px 10px 15px;
 
     width: 80%;
-    height: 30%;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     
 }
@@ -471,6 +472,7 @@ footer{
     .products-1337zxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxc{
         flex-direction: column;
         padding: 5px;
+        height: 160px;
     }
     .products-1337zxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxc form button{
         width: 200px;
@@ -618,6 +620,8 @@ footer{
     .products-1337zxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxc{
         flex-direction: column;
         padding: 5px;
+        height: 170px;
+
     }
     .products-1337zxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxczxc form button{
         width: 150px;

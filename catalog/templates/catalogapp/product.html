@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
 <div class="bg-succes" hidden style="left: 0;right: 0;top: 0;bottom: 0; z-index: 50; position:fixed; background-color: rgba(0, 0, 0, 0.429); display: flex; width: 100%; height: 100%;margin: 0;padding: 0; align-items: center; justify-content: center;">
   <div class="succes" style="display: flex; width: 80%; height: 50%; background-color: white; border-radius: 20px; flex-direction: column;align-items: center;justify-content: center; text-align: center;">
@@ -44,26 +44,6 @@
             </ul>
           </div>
         </div>
-        
-        <!-- <ul class="nav nav-tabs"  id="myTab" role="tablist">
-          <li class="nav-item p-2" role="presentation">
-            <button class="btn btn-outline-secondary active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane"
-              type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Description</button>
-          </li>
-          <li class="nav-item p-2" role="presentation">
-            <button class="btn btn-outline-secondary" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane"
-              type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Features</button>
-          </li>
-          <li class="nav-item p-2" role="presentation">
-            <button class="btn btn-outline-secondary" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane"
-              type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">Create comments</button>
-          </li>
-          <li class="nav-item p-2" role="presentation">
-            <button class="btn btn-outline-secondary" id="contact-tab-1" data-bs-toggle="tab" data-bs-target="#contact-tab-pane-1"
-              type="button" role="tab" aria-controls="contact-tab-pane-1" aria-selected="false">Comments</button>
-          </li>
-        </ul> -->
-
         <div class="tab-content" id="myTabContent">
           <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel"
             aria-labelledby="home-tab" tabindex="0">{{ product.description }}</div>
@@ -127,13 +107,7 @@
           },
           success: function (response) {
             document.querySelector('.bg-succes').hidden = false
-            let count = document.querySelector('#countProductInCart');
-            if (count.textContent == 'None') {
-              count.textContent = '1';
-              count.style.display = 'flex';
-            } else {
-              count.textContent = Number(count.textContent) + 1;
-            }
+
           },
         });
       });
@@ -200,6 +174,21 @@
     document.querySelector('.bg-succes').addEventListener('click', (event) => {
       document.querySelector('.bg-succes').hidden = true;
     })
+</script>
+<script>
 
+  document.querySelector('#load-comments-btn').addEventListener('click', (event) => {
+    if (count1.textContent == 'None' || count2.textContent == 'None') {
+      console.log('дупа')
+      count1.textContent = '1';
+      count1.style.display = 'block';
+      count2.textContent = '1';
+      count2.style.display = 'block';
+    } else {
+      
+        count1.textContent = Number(count1.textContent) + 1;
+        count2.textContent = Number(count2.textContent) + 1;
+    }
+  });
 </script>
 {% endblock %}

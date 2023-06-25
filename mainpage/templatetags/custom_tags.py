@@ -8,6 +8,7 @@ def count_products_in_cart(request):
     if products_in_cart == None:
         pass
     else:
-        products_count = len(products_in_cart)
+        
         products_in_cart = products_in_cart.split(' ')
+        products_count = len(products_in_cart)
         return products_count
